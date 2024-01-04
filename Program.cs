@@ -1,4 +1,5 @@
-﻿using static System.Formats.Asn1.AsnWriter;
+﻿using System;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace GA_LinearSearch
 {
@@ -10,34 +11,40 @@ namespace GA_LinearSearch
         static string[] storeCategories;
         static Store[] stores;
 
+        static string[] consoles;
+        static string[] games;
+        static GameConsole[] gameConsoles;
+        static string[] company;
+
         static void Main(string[] args)
         {
             Preload();
 
             Console.WriteLine("Contains");
-            Console.WriteLine(ContainsStore(storeDirectory, "Aqua Adventures").ToString()); // True
-            Console.WriteLine(ContainsStore(storeDirectory, "Box Lunch").ToString()); // False
+            Console.WriteLine(ContainsCompany(consoles, "Sony").ToString()); // True
+            Console.WriteLine(ContainsCompany(consoles, "Sega").ToString()); // False
 
             Console.WriteLine("Store By Index");
-            Console.WriteLine(StoreByCategory(storeCategories, "Entertainment").ToString()); // 1
-            Console.WriteLine(StoreByCategory(storeCategories, "Food").ToString()); // -1
+            Console.WriteLine(GameByConsole(games, "Nintendo 3DS").ToString()); // 6
+            Console.WriteLine(GameByConsole(games, "Sega").ToString()); // -1
 
-            Console.WriteLine("All stores of a category");
-            Console.WriteLine(AllStoresOfACategory(storeCategories, "Café & Bakery").Count); // 2
-            Console.WriteLine(AllStoresOfACategory(storeCategories, "Food").Count); // 0
+            Console.WriteLine("All games of a console");
+            Console.WriteLine(AllGamesbyConsole(consoles, "Xbox One").Count); // 2
+            Console.WriteLine(AllGamesbyConsole(consoles, "Xbox Series s").Count); // 0
 
-            Console.WriteLine("All stores on a floor");
-            List<Store> storeResults = AllStoresOnLevel(stores, "A");
-            Console.WriteLine(storeResults.Count); // 4
-            foreach(Store store in storeResults) { Console.WriteLine($"{store.Name} - {store.StoreLocation}"); }
-            Console.WriteLine(AllStoresOnLevel(stores, "E").Count); // 0
+            Console.WriteLine("All consoles In a company (Just use the first Letter)");
+            List<GameConsole> companyResults = AllConsolesInCompany(gameConsoles, "N");
+            Console.WriteLine(companyResults.Count); // 4
+            foreach (GameConsole console in companyResults) { Console.WriteLine($"{console.ConsoleName} - {console.Company}"); }
+            Console.WriteLine(AllConsolesInCompany(gameConsoles, "N").Count); // 0
+
         }
 
-            public static bool ContainsStore(string[] storeList, string searchKey)
+        public static bool ContainsCompany(string[] companyList, string searchKey)
         {
-            foreach (string store in storeList)
+            foreach (string company in companyList)
             {
-                if (store == searchKey)
+                if (company == searchKey)
                 {
                     return true;
                 }
@@ -45,11 +52,11 @@ namespace GA_LinearSearch
             return false;
         }
 
-        public static int StoreByCategory(string[] storeList, string searchKey)
+        public static int GameByConsole(string[] games, string searchKey)
         {
-            for (int i = 0; i < storeList.Length; i++)
+            for (int i = 0; i < consoles.Length; i++)
             {
-                if (storeList[i] == searchKey)
+                if (consoles[i] == searchKey)
                 {
                     return i;
                 }
@@ -57,12 +64,12 @@ namespace GA_LinearSearch
             return -1; // Return -1 if not found
         }
 
-        public static List<int> AllStoresOfACategory(string[] storeList, string searchKey)
+        public static List<int> AllGamesbyConsole(string[] games, string searchKey)
         {
             List<int> indices = new List<int>();
-            for (int i = 0; i < storeList.Length; i++)
+            for (int i = 0; i < games.Length; i++)
             {
-                if (storeCategories[i] == searchKey)
+                if (games[i] == searchKey)
                 {
                     indices.Add(i);
                 }
@@ -70,18 +77,20 @@ namespace GA_LinearSearch
             return indices;
         }
 
-        public static List<Store> AllStoresOnLevel(Store[] storeList, string searchKey)
+        public static List<GameConsole> AllConsolesInCompany(GameConsole[] consolelist, string searchKey)
         {
-            List<Store> storesInCategory = new List<Store>();
-            foreach (Store store in storeList)
+            List<GameConsole> consolesInCompany = new List<GameConsole>();
+            foreach (GameConsole console in consolelist)
             {
-                if (store.StoreLocation[0].ToString() == searchKey)
+                if (console.Company[0].ToString() == searchKey)
                 {
-                    storesInCategory.Add(store);
+                    consolesInCompany.Add(console);
                 }
             }
-            return storesInCategory;
+            return consolesInCompany;
         }
+
+
 
         static void Preload()
         {
@@ -127,7 +136,72 @@ namespace GA_LinearSearch
             new Store("Frosty Delights", "Café & Bakery", "A31")
             };
 
+            games = new string[]
+            {
+             "The Legend of Zelda: Breath of the Wild",
+            "Super Mario Odyssey",
+            "Red Dead Redemption 2",
+            "Fortnite",
+            "Minecraft",
+            "Overwatch",
+            "Cyberpunk 2077",
+            "Assassin's Creed Valhalla",
+            "Call of Duty: Warzone",
+            "FIFA 21",
+            "FIFA 17",
+            "FIFA 15",
+            "MarioKart DS",
+            "MarioKart7"
+            };
+
+            consoles = new string[]
+            {
+            "PlayStation 5",
+            "Xbox Series X",
+            "Nintendo Switch",
+            "PlayStation 4",
+            "Xbox One",
+            "Nintendo Wii U",
+            "Nintendo 3DS",
+            "PC",
+            "Nintendo DS",
+            "PlayStation 3"
+
+            };
+
+            company = new string[]
+            {
+                "Sony",
+                "Microsoft",
+                "Nintendo",
+                "Epic Games",
+                "Mojang",
+                "Blizzard"
+            };
+
+            gameConsoles = new GameConsole[]
+            {
+                new GameConsole("Nintendo Wii U","The Legend of Zelda: Breath of the Wild", "Nintendo"),
+                new GameConsole("Nintendo Switch", "Super Mario Odyssey", "Nintendo"),
+                new GameConsole("Xbox Series X", "Red Dead Redemption 2", "Microsoft"),
+                new GameConsole("Xbox One","Fortnite", "Microsoft"),
+                new GameConsole("PC", "Minecraft", "Mojang"),
+                new GameConsole("PC", "Overwatch", "Blizzard"),
+                new GameConsole("PC", "Cyberpunk 2077", "Epic Games"),
+                new GameConsole("PlayStation 5", "Assassin's Creed Valhalla","Sony"),
+                new GameConsole("PlayStation 5", "Call of Duty: Warzone", "Sony"),
+                new GameConsole("PlayStation 3", "FIFA 15", "Sony"),
+                new GameConsole("PlayStation 4", "FIFA 17", "Sony"),
+                new GameConsole("Nintendo DS", "MarioKart DS", "Nintendo"),
+                new GameConsole("Nintendo 3DS","MarioKart7", "Nintendo")
+
+            };
+
+
         } // End Preload
+
+       
+
 
     }
 }
